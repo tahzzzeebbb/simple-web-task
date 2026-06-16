@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Admission Form</title>
+    <style>
+        body {
+            background-color: plum;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: purple;
+            font-style: italic;
+        }
+
+        form {
+            width: 500px;
+            margin: auto;
+            background-color: thistle;
+            padding: 20px;
+            border: 2px solid purple;
+            border-radius: 10px;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        td {
+            padding: 10px;
+        }
+
+        .skills-table td {
+            padding: 5px;
+        }
+
+        .form-buttons {
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        #output {
+            width: 500px;
+            margin: 20px auto;
+            background: #fff3ff;
+            border: 1px solid purple;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1><b><i>Student Admission Form</i></b></h1>
+    <hr>
+
+    <form id="LoginForm" onsubmit="handleSubmit(event)">
+        <table>
+            <tr>
+                <td>Login</td>
+                <td><input type="text" id="Login" required></td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td><input type="password" id="Password" required></td>
+            </tr>
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" name="Gender" value="Male"> Male
+                    <input type="radio" name="Gender" value="Female"> Female
+                </td>
+            </tr>
+            <tr>
+                <td>Country</td>
+                <td>
+                    <select id="Country">
+                        <option value="pak">Pakistan</option>
+                        <option value="ind">India</option>
+                        <option value="china">China</option>
+                        <option value="usa">USA</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="aus">Australia</option>
+                        <option value="can">Canada</option>
+                        <option value="ger">Germany</option>
+                        <option value="fra">France</option>
+                        <option value="uae">UAE</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Skills</td>
+                <td>
+                    <table class="skills-table">
+                        <tr>
+                            <td><input type="checkbox" name="skills" value="C++"> C++</td>
+                            <td><input type="checkbox" name="skills" value="Java"> Java</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="skills" value="Web Tech"> Web Tech</td>
+                            <td><input type="checkbox" name="skills" value="Python"> Python</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>Objective</td>
+                <td>
+                    <textarea id="Objective" rows="4" cols="30" placeholder="Write your objective here..."></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="form-buttons">
+                    <input type="submit" value="Submit">
+                    <input type="reset" value="Reset" id="resetBtn">
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const login = document.getElementById('Login').value;
+            const password = document.getElementById('Password').value;
+            const gender = document.querySelector('input[name="Gender"]:checked')?.value || "Not selected";
+            const country = document.getElementById('Country').value;
+            const skills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(cb => cb.value);
+            const objective = document.getElementById('Objective').value;
+
+            const output = document.getElementById('output');
+            output.innerHTML = `
+                <h3>Submitted Data:</h3>
+                <p><strong>Login:</strong> ${login}</p>
+                <p><strong>Password:</strong> ${'*'.repeat(password.length)}</p>
+                <p><strong>Gender:</strong> ${gender}</p>
+                <p><strong>Country:</strong> ${country}</p>
+                <p><strong>Skills:</strong> ${skills.join(', ') || 'None'}</p>
+                <p><strong>Objective:</strong> ${objective || 'N/A'}</p>
+            `;
+        }
+
+        document.getElementById("resetBtn").addEventListener("click", () => {
+            document.getElementById("output").innerHTML = "";
+        });
+    </script>
+
+</body>
+</html>

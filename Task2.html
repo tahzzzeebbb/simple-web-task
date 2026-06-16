@@ -1,0 +1,85 @@
+
+<html>
+
+<head>
+    <title>Student Admission Form</title>
+</head>
+
+<body bgcolor="plum">
+    <h1 align="center">
+        <font color="purple"><b><i>Student Admission Form</i></b></font>
+    </h1>
+    <hr>
+
+    <form name="LoginForm" id="LoginForm" method="post">
+        <table align="center" border="1" cellpadding="16" cellspacing="6" bgcolor="thistle">
+            <tr>
+                <td>Login</td>
+                <td><input type="text" name="Login" id="Login"></td>
+            </tr>
+
+            <tr>
+                <td>Password</td>
+                <td><input type="password" name="Password" id="Password"></td>
+            </tr>
+
+            <tr>
+                <td>Gender</td>
+                <td>
+                    <input type="radio" name="Gender" value="Male"> Male
+                    <input type="radio" name="Gender" value="Female"> Female
+                </td>
+            </tr>
+
+            <tr>
+                <td>Country</td>
+                <td>
+                    <select name="Country">
+                        <option value="pak">Pakistan</option>
+                        <option value="ind">India</option>
+                        <option value="china">China</option>
+                        <option value="usa">USA</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="aus">Australia</option>
+                        <option value="can">Canada</option>
+                        <option value="ger">Germany</option>
+                        <option value="fra">France</option>
+                        <option value="uae">UAE</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Skills</td>
+                <td>
+                    <table>
+                        <tr>
+                            <td><input type="checkbox" name="skills" value="C++"> C++</td>
+                            <td><input type="checkbox" name="skills" value="Java"> Java</td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" name="skills" value="Web Tech"> Web Tech</td>
+                            <td><input type="checkbox" name="skills" value="Python"> Python</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Objective</td>
+                <td>
+                    <textarea name="Objective" rows="4" cols="30" placeholder="Write your objective here..."></textarea>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="Submit"s>
+                    <input type="reset" value="Reset">
+                </td>
+            </tr>
+        </table>
+    </form>
+</body>
+
+</html>

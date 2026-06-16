@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Calendar with History</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7ff;
+            color: var(--dark-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            padding: 20px;
+            gap: 20px;
+        }
+        
+        /* History Panel */
+        .history-panel {
+            width: 320px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        
+        .history-panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .history-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .history-header i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .history-header h2 {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        #history-frame {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .history-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(67, 97, 238, 0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+        
+        .history-item:hover {
+            background: rgba(67, 97, 238, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .history-item a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .history-item i {
+            color: var(--accent-color);
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .history-item .domain {
+            color: #6c757d;
+            font-size: 0.8rem;
+            margin-top: 3px;
+        }
+        
+        /* Calendar Panel */
+        .calendar-panel {
+            flex: 1;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        #month-year {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        #month-year i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-nav button {
+            background: var(--light-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .calendar-nav button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .calendar {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 8px;
+        }
+        
+        .calendar th {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-align: center;
+            padding: 12px 0;
+        }
+        
+        .calendar td {
+            text-align: center;
+            padding: 12px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .calendar td:hover:not(.empty, .today) {
+            background: rgba(67, 97, 238, 0.1);
+        }
+        
+        .calendar td.empty {
+            background: transparent;
+            cursor: default;
+        }
+        
+        .today {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .today::after {
+            content: 'Today';
+            position: absolute;
+            top: -8px;
+            right: 5px;
+            background: var(--warning-color);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+        
+        .event-marker {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--success-color);
+            border-radius: 50%;
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .action-button {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .primary-button {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .primary-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .secondary-button {
+            background: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .secondary-button:hover {
+            background: #e9ecef;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            background: var(--dark-color);
+            color: white;
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .clock {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .clock i {
+            color: var(--success-color);
+        }
+        
+        .status-message {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .history-panel {
+                width: 100%;
+            }
+            
+            .calendar th, .calendar td {
+                padding: 8px 0;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .history-item, .calendar td {
+            animation: fadeIn 0.4s ease forwards;
+        }
+        
+        .history-item:nth-child(1) { animation-delay: 0.1s; }
+        .history-item:nth-child(2) { animation-delay: 0.2s; }
+        .history-item:nth-child(3) { animation-delay: 0.3s; }
+        .history-item:nth-child(4) { animation-delay: 0.4s; }
+        .history-item:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="history-panel">
+            <div class="history-header">
+                <i class="fas fa-history"></i>
+                <h2>Recent History</h2>
+            </div>
+            <div id="history-frame">
+                <!-- History items will be inserted here by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="calendar-panel">
+            <div class="calendar-header">
+                <div id="month-year">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>May 2023</span>
+                </div>
+                <div class="calendar-nav">
+                    <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+            
+            <table class="calendar" id="calendar">
+                <thead>
+                    <tr>
+                        <th>Sun</th>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body">
+                    <!-- Calendar will be generated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="action-buttons">
+                <button class="secondary-button" id="today-btn">
+                    <i class="fas fa-calendar-day"></i> Today
+                </button>
+                <button class="primary-button" onclick="openWelcomeWindow()">
+                    <i class="fas fa-external-link-alt"></i> Open Welcome
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="status-bar">
+        <div class="status-message">
+            <i class="fas fa-info-circle"></i> Double click on dates to add events
+        </div>
+        <div class="clock" id="clock">
+            <i class="far fa-clock"></i>
+            <span>12:34:56 PM</span>
+        </div>
+    </div>
+
+    <script>
+        // Current date information
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+        
+        // Generate calendar for specific month/year
+        function generateCalendar(month, year) {
+            const firstDay = new Date(year, month, 1);
+            const startingDay = firstDay.getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            // Update month/year display
+            const monthYearDisplay = new Date(year, month).toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric'
+            });
+            document.getElementById('month-year').querySelector('span').textContent = monthYearDisplay;
+            
+            // Clear previous calendar
+            const calendarBody = document.getElementById('calendar-body');
+            calendarBody.innerHTML = '';
+            
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                // Stop if we've gone past the last day of the month
+                if (date > daysInMonth) break;
+                
+                const row = document.createElement('tr');
+                
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    
+                    if (i === 0 && j < startingDay) {
+                        cell.textContent = '';
+                        cell.classList.add('empty');
+                    } else if (date > daysInMonth) {
+                        cell.textContent = '';
+                        cell.classList.add('empty');
+                    } else {
+                        // Current date cell
+                        cell.textContent = date;
+                        
+                        // Highlight today's date
+                        const today = new Date();
+                        if (date === today.getDate() && 
+                            month === today.getMonth() && 
+                            year === today.getFullYear()) {
+                            cell.classList.add('today');
+                        }
+                        
+                        // Add event markers (random for demo)
+                        if (Math.random() > 0.7) {
+                            const marker = document.createElement('div');
+                            marker.classList.add('event-marker');
+                            cell.appendChild(marker);
+                        }
+                        
+                        // Double click to add event
+                        cell.addEventListener('dblclick', function() {
+                            alert(`Would add event to ${month+1}/${date}/${year}`);
+                        });
+                        
+                        date++;
+                    }
+                    
+                    row.appendChild(cell);
+                }
+                
+                calendarBody.appendChild(row);
+            }
+        }
+        
+        // Simulate browser history with favicons
+        function displayHistory() {
+            const historyItems = [
+                { 
+                    title: 'Google Search', 
+                    url: 'https://www.google.com',
+                    icon: 'fa-search',
+                    domain: 'google.com'
+                },
+                { 
+                    title: 'GitHub Repository', 
+                    url: 'https://www.github.com',
+                    icon: 'fa-code-branch',
+                    domain: 'github.com'
+                },
+                { 
+                    title: 'Stack Overflow', 
+                    url: 'https://stackoverflow.com',
+                    icon: 'fa-question-circle',
+                    domain: 'stackoverflow.com'
+                },
+                { 
+                    title: 'MDN Web Docs', 
+                    url: 'https://developer.mozilla.org',
+                    icon: 'fa-file-code',
+                    domain: 'mozilla.org'
+                },
+                { 
+                    title: 'Wikipedia Article', 
+                    url: 'https://www.wikipedia.org',
+                    icon: 'fa-book',
+                    domain: 'wikipedia.org'
+                }
+            ];
+            
+            const historyFrame = document.getElementById('history-frame');
+            historyItems.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                
+                const link = document.createElement('a');
+                link.href = item.url;
+                link.target = '_blank';
+                
+                link.innerHTML = `
+                    <i class="fas ${item.icon}"></i>
+                    <div>
+                        <div>${item.title}</div>
+                        <div class="domain">${item.domain}</div>
+                    </div>
+                `;
+                
+                div.appendChild(link);
+                historyFrame.appendChild(div);
+            });
+        }
+        
+        // Update the clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('clock').querySelector('span').textContent = timeString;
+        }
+        
+        // Window.open demonstration with better styling
+        function openWelcomeWindow() {
+            const newWindow = window.open('', '_blank', 'width=500,height=400,top=100,left=100');
+            newWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Welcome Window</title>
+                    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <style>
+                        body {
+                            font-family: 'Poppins', sans-serif;
+                            background: linear-gradient(135deg, #4361ee, #3a0ca3);
+                            color: white;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            margin: 0;
+                            text-align: center;
+                        }
+                        .welcome-container {
+                            padding: 30px;
+                            background: rgba(255, 255, 255, 0.1);
+                            border-radius: 16px;
+                            backdrop-filter: blur(10px);
+                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+                            max-width: 80%;
+                        }
+                        h1 {
+                            font-size: 2.2rem;
+                            margin-bottom: 20px;
+                        }
+                        p {
+                            font-size: 1.1rem;
+                            margin-bottom: 30px;
+                            opacity: 0.9;
+                        }
+                        .icon {
+                            font-size: 3rem;
+                            color: #4cc9f0;
+                            margin-bottom: 20px;
+                            animation: bounce 2s infinite;
+                        }
+                        @keyframes bounce {
+                            0%, 100% { transform: translateY(0); }
+                            50% { transform: translateY(-10px); }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="welcome-container">
+                        <div class="icon"><i class="fas fa-window-restore"></i></div>
+                        <h1>Welcome to window.open()</h1>
+                        <p>This window was opened using JavaScript's window.open() method.</p>
+                        <p>You can customize the size, position and features of the new window.</p>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+        
+        // Navigation controls
+        document.getElementById('prev-month').addEventListener('click', function() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+        
+        document.getElementById('next-month').addEventListener('click', function() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            generateCalendar(currentMonth, currentYear);
+        });
+        
+        document.getElementById('today-btn').addEventListener('click', function() {
+            currentDate = new Date();
+            currentMonth = currentDate.getMonth();
+            currentYear = currentDate.getFullYear();
+            generateCalendar(currentMonth, currentYear);
+        });
+        
+        // Initialize everything when the page loads
+        window.onload = function() {
+            generateCalendar(currentMonth, currentYear);
+            displayHistory();
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Add smooth transition when page loads
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+        };
+    </script>
+</body>
+</html>

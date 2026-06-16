@@ -1,0 +1,35 @@
+/* tealblue.css */
+body {
+  background-color: lightgray;
+}
+
+.header, .footer {
+  background-color: teal;
+  padding: 10px;
+  border: 2px solid black;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+.red-box {
+  background-color: #f8d7da;
+  padding: 10px;
+  border: 2px solid black;
+  margin-bottom: 3px;
+  text-align: center;
+}
+
+h3, h6 {
+  background-color: teal;
+  text-align: center;
+  font-style: italic;
+  color: black;
+  margin: 0;
+}
+
+p {
+  text-align: center;
+  font-style: italic;
+  color: black;
+  margin: 10px;
+}

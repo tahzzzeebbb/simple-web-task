@@ -1,0 +1,8 @@
+/* aquagreen.css */
+.green-box {
+  background-color: #d4edda;
+  padding: 10px;
+  border: 2px solid black;
+  margin-bottom: 3px;
+  text-align: center;
+}

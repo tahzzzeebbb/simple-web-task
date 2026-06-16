@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Windows Calculator Style</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #dcdcdc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background: #f3f3f3;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+      padding: 20px;
+    }
+
+    .display {
+      background: #e6e6e6;
+      color: #000;
+      font-size: 28px;
+      text-align: right;
+      padding: 12px 15px;
+      border-radius: 8px;
+      height: 55px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    button {
+      font-size: 18px;
+      padding: 18px 0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #e0e0e0;
+      transition: background 0.2s ease, transform 0.1s;
+      font-weight: 500;
+      box-shadow: inset 0 0 0 transparent;
+    }
+
+    button:hover {
+      background: #d0d0d0;
+    }
+
+    .operator {
+      background: #f57c00;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .operator:hover {
+      background: #e06d00;
+      transform: scale(1.05);
+    }
+
+    .equal {
+      background: #1976d2;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .equal:hover {
+      background: #125bb5;
+      transform: scale(1.05);
+    }
+
+    .clear {
+      background: #a0a0a0;
+      color: white;
+      font-weight: bold;
+    }
+
+    .clear:hover {
+      background: #8b8b8b;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="appendValue('%')">%</button>
+      <button onclick="backspace()">⌫</button>
+      <button class="operator" onclick="appendValue('÷')">÷</button>
+
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendValue('×')">×</button>
+
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendValue('-')">−</button>
+
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendValue('+')">+</button>
+
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equal" style="grid-column: span 2;" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <script>
+    const display = document.getElementById('display');
+
+    function appendValue(value) {
+      if (display.innerHTML === '0' || display.innerHTML === 'Error') {
+        display.innerHTML = value;
+      } else {
+        display.innerHTML += value;
+      }
+    }
+
+    function clearDisplay() {
+      display.innerHTML = '0';
+    }
+
+    function backspace() {
+      const text = display.innerHTML;
+      display.innerHTML = text.length > 1 ? text.slice(0, -1) : '0';
+    }
+
+    function calculate() {
+      try {
+        const expression = display.innerHTML
+          .replace(/×/g, '*')
+          .replace(/÷/g, '/');
+        display.innerHTML = eval(expression);
+      } catch {
+        display.innerHTML = 'Error';
+      }
+    }
+  </script>
+</body>
+</html>
